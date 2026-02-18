@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rasmi & Max — We're Getting Married!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-confetti hero-confetti-left" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="hero-confetti hero-confetti-right" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="hero-content">
+      <p class="hero-subtitle">We're Getting Married!</p>
+      <h1 class="hero-title">Rasmi & Max</h1>
+      <p class="hero-date">January 21, 2027</p>
+      <p class="hero-location">Fort Lauderdale, Florida</p>
+      <p class="hero-story">
+        We're so excited to celebrate our wedding with you in beautiful Fort Lauderdale. 
+        What started as a spark has grown into a love we can't wait to make official. 
+        Join us for a day of joy, laughter, and new beginnings.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="section section-details">
+      <div class="container">
+        <h2 class="section-title">Event Details</h2>
+        <div class="details-card">
+          <div class="detail-item">
+            <span class="detail-label">When</span>
+            <span class="detail-value">Saturday, January 21, 2027</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Where</span>
+            <span class="detail-value">Fort Lauderdale, Florida</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Venue</span>
+            <span class="detail-value">Details to follow</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-rsvp">
+      <div class="container">
+        <h2 class="section-title">RSVP</h2>
+        <p class="rsvp-text">Please let us know if you'll be able to join us!</p>
+        <p class="rsvp-deadline">Kindly respond by December 1, 2026</p>
+        <form id="rsvp-form" class="rsvp-form">
+          <div class="rsvp-field">
+            <label for="rsvp-name">Name</label>
+            <input type="text" id="rsvp-name" name="name" required placeholder="Your name" />
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-email">Email</label>
+            <input type="email" id="rsvp-email" name="email" required placeholder="your@email.com" />
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-attending">Will you attend?</label>
+            <select id="rsvp-attending" name="attending" required>
+              <option value="">Select...</option>
+              <option value="yes">Yes, I'll be there!</option>
+              <option value="no">Sorry, I can't make it</option>
+            </select>
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-message">Message (optional)</label>
+            <textarea id="rsvp-message" name="message" rows="3" placeholder="Anything you'd like to share..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" id="rsvp-submit">Submit RSVP</button>
+          <p id="rsvp-status" class="rsvp-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section section-gallery">
+      <div class="container container-gallery">
+        <div class="carousel">
+          <button type="button" class="carousel-btn carousel-prev" aria-label="Previous photo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="carousel-track" aria-label="Photo gallery">
+            <!-- Images are injected from config.js via script.js -->
+          </div>
+          <button type="button" class="carousel-btn carousel-next" aria-label="Next photo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+    </section>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+      <button type="button" class="lightbox-prev" aria-label="Previous">&lsaquo;</button>
+      <img src="" alt="" class="lightbox-img" />
+      <button type="button" class="lightbox-next" aria-label="Next">&rsaquo;</button>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p class="footer-text">Rasmi & Max</p>
+    <p class="footer-date">January 21, 2027 · Fort Lauderdale, Florida</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
