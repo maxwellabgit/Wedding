@@ -1,6 +1,6 @@
 # Rasmi & Max — Wedding Website
 
-A simple, elegant wedding website for January 21, 2027 in Fort Lauderdale, Florida.
+A simple, elegant wedding website for December 19th, 2027 in Fort Lauderdale, Florida.
 
 ## Customize
 
