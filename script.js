@@ -43,13 +43,24 @@ function clampIndex(i) {
   return Math.max(0, Math.min(n - 1, i));
 }
 
-function updateCarousel() {
-  currentIndex = clampIndex(currentIndex);
-  const img = images[currentIndex];
-  if (img) img.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+function setActiveDot() {
   document.querySelectorAll(".carousel-dot").forEach((dot, i) => {
     dot.classList.toggle("active", i === currentIndex);
   });
+}
+
+function updateCarousel({ scroll = true } = {}) {
+  currentIndex = clampIndex(currentIndex);
+  const img = images[currentIndex];
+  // Horizontal-only scroll on the carousel track itself, not the page,
+  // so first-time visitors don't get yanked down to the gallery on load.
+  if (img && scroll && track) {
+    const trackRect = track.getBoundingClientRect();
+    const imgRect = img.getBoundingClientRect();
+    const delta = (imgRect.left + imgRect.width / 2) - (trackRect.left + trackRect.width / 2);
+    track.scrollBy({ left: delta, behavior: "smooth" });
+  }
+  setActiveDot();
 }
 
 function createDots() {
@@ -85,7 +96,7 @@ function initCarousel() {
       updateCarousel();
     });
   }
-  if (n > 0) updateCarousel();
+  if (n > 0) updateCarousel({ scroll: false });
 }
 
 initCarousel();
@@ -253,12 +264,29 @@ if (rsvpAttending) {
   syncGuestsVisibility();
 }
 
+// Lazily build a Supabase client — the SDK handles the new sb_publishable_*
+// API key format properly (raw fetch with Authorization: Bearer breaks because
+// the publishable key is not a JWT).
+let _sbClient = null;
+function getSupabaseClient() {
+  if (_sbClient) return _sbClient;
+  const config = window.SUPABASE_CONFIG;
+  const apiKey = config?.publishableKey || config?.anonKey;
+  if (!config?.url || !apiKey) return null;
+  if (config.url.includes("YOUR_") || apiKey.includes("YOUR_")) return null;
+  if (!window.supabase?.createClient) return null;
+  _sbClient = window.supabase.createClient(config.url, apiKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  return _sbClient;
+}
+
 if (rsvpForm) {
   rsvpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const sb = getSupabaseClient();
     const config = window.SUPABASE_CONFIG;
-    const apiKey = config?.publishableKey || config?.anonKey;
-    if (!config?.url || !apiKey || config.url.includes("YOUR_") || apiKey.includes("YOUR_")) {
+    if (!sb) {
       rsvpStatus.textContent = "RSVP is not configured yet. Please add your Supabase keys to config.js";
       rsvpStatus.className = "rsvp-status rsvp-error";
       return;
@@ -291,26 +319,13 @@ if (rsvpForm) {
     };
 
     try {
-      // Upsert keyed on email. resolution=merge-duplicates makes a re-submit
-      // with the same email overwrite the prior row instead of erroring.
-      const res = await fetch(
-        `${config.url}/rest/v1/${config.tableName}?on_conflict=email`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: apiKey,
-            Authorization: `Bearer ${apiKey}`,
-            Prefer: "return=minimal,resolution=merge-duplicates",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      // Upsert keyed on email — re-submitting with the same email overwrites
+      // the prior row in place instead of erroring on the unique constraint.
+      const { error } = await sb
+        .from(config.tableName || "rsvps")
+        .upsert(data, { onConflict: "email", ignoreDuplicates: false });
 
-      if (!res.ok) {
-        const err = await res.text();
-        throw new Error(err || `HTTP ${res.status}`);
-      }
+      if (error) throw error;
 
       rsvpStatus.textContent = "Thank you! Your RSVP has been saved. You can re-submit anytime to update it.";
       rsvpStatus.className = "rsvp-status rsvp-success";
