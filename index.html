@@ -23,7 +23,7 @@
     <div class="hero-content">
       <p class="hero-subtitle">We're Getting Married!</p>
       <h1 class="hero-title">Rasmi & Max</h1>
-      <p class="hero-date">January 31st, 2027</p>
+      <p class="hero-date">January 17th, 2027</p>
       <p class="hero-location">The Biltmore Hotel · Coral Gables, Florida</p>
       <p class="hero-story">
         We're thrilled to invite you to celebrate our wedding beneath the storied arches of
@@ -41,7 +41,7 @@
         <div class="details-card">
           <div class="detail-item">
             <span class="detail-label">When</span>
-            <span class="detail-value">Sunday, January 31st, 2027</span>
+            <span class="detail-value">Sunday, January 17th, 2027</span>
             <span class="detail-sub">Ceremony &amp; reception to follow</span>
           </div>
           <div class="detail-item">
@@ -170,13 +170,44 @@
         <p class="rsvp-deadline">Kindly respond by December 1, 2026</p>
         <form id="rsvp-form" class="rsvp-form">
           <div class="rsvp-field">
-            <label for="rsvp-name">Name</label>
-            <input type="text" id="rsvp-name" name="name" required placeholder="Your name" />
+            <label for="rsvp-name">Full name</label>
+            <input type="text" id="rsvp-name" name="name" required placeholder="Your name" autocomplete="name" />
           </div>
           <div class="rsvp-field">
             <label for="rsvp-email">Email</label>
-            <input type="email" id="rsvp-email" name="email" required placeholder="your@email.com" />
+            <input type="email" id="rsvp-email" name="email" required placeholder="your@email.com" autocomplete="email" />
           </div>
+
+          <fieldset class="rsvp-fieldset">
+            <legend>Mailing address</legend>
+            <div class="rsvp-field">
+              <label for="rsvp-address1">Street address</label>
+              <input type="text" id="rsvp-address1" name="address_line1" required placeholder="123 Main St" autocomplete="address-line1" />
+            </div>
+            <div class="rsvp-field">
+              <label for="rsvp-address2">Apt / Suite (optional)</label>
+              <input type="text" id="rsvp-address2" name="address_line2" placeholder="Apt 4B" autocomplete="address-line2" />
+            </div>
+            <div class="rsvp-row">
+              <div class="rsvp-field">
+                <label for="rsvp-city">City</label>
+                <input type="text" id="rsvp-city" name="city" required autocomplete="address-level2" />
+              </div>
+              <div class="rsvp-field">
+                <label for="rsvp-state">State</label>
+                <input type="text" id="rsvp-state" name="state" required maxlength="40" autocomplete="address-level1" />
+              </div>
+              <div class="rsvp-field">
+                <label for="rsvp-postal">ZIP / Postal</label>
+                <input type="text" id="rsvp-postal" name="postal_code" required autocomplete="postal-code" />
+              </div>
+            </div>
+            <div class="rsvp-field">
+              <label for="rsvp-country">Country</label>
+              <input type="text" id="rsvp-country" name="country" required value="United States" autocomplete="country-name" />
+            </div>
+          </fieldset>
+
           <div class="rsvp-field">
             <label for="rsvp-attending">Will you attend?</label>
             <select id="rsvp-attending" name="attending" required>
@@ -184,6 +215,11 @@
               <option value="yes">Yes, I'll be there!</option>
               <option value="no">Sorry, I can't make it</option>
             </select>
+          </div>
+          <div class="rsvp-field" id="rsvp-guests-field">
+            <label for="rsvp-guests">How many guests are coming with you?</label>
+            <input type="number" id="rsvp-guests" name="additional_guests" min="0" max="10" step="1" value="0" required />
+            <span class="rsvp-help">Count of additional people in your party (not including yourself).</span>
           </div>
           <div class="rsvp-field">
             <label for="rsvp-message">Message (optional)</label>
@@ -223,7 +259,7 @@
 
   <footer class="footer">
     <p class="footer-text">Rasmi & Max</p>
-    <p class="footer-date">January 31st, 2027 · The Biltmore Hotel · Coral Gables, Florida</p>
+    <p class="footer-date">January 17th, 2027 · The Biltmore Hotel · Coral Gables, Florida</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

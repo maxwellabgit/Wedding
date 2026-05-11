@@ -236,6 +236,22 @@ document.addEventListener("keydown", (e) => {
 const rsvpForm = document.getElementById("rsvp-form");
 const rsvpStatus = document.getElementById("rsvp-status");
 const rsvpSubmit = document.getElementById("rsvp-submit");
+const rsvpAttending = document.getElementById("rsvp-attending");
+const rsvpGuestsField = document.getElementById("rsvp-guests-field");
+const rsvpGuestsInput = document.getElementById("rsvp-guests");
+
+// Hide the guest count when the response is "no" — they're not bringing anyone.
+function syncGuestsVisibility() {
+  if (!rsvpAttending || !rsvpGuestsField || !rsvpGuestsInput) return;
+  const decline = rsvpAttending.value === "no";
+  rsvpGuestsField.style.display = decline ? "none" : "";
+  if (decline) rsvpGuestsInput.value = "0";
+}
+
+if (rsvpAttending) {
+  rsvpAttending.addEventListener("change", syncGuestsVisibility);
+  syncGuestsVisibility();
+}
 
 if (rsvpForm) {
   rsvpForm.addEventListener("submit", async (e) => {
@@ -253,34 +269,53 @@ if (rsvpForm) {
     rsvpStatus.className = "rsvp-status";
 
     const formData = new FormData(rsvpForm);
+    const attending = formData.get("attending");
+    // Normalize email so case/whitespace variations don't create duplicate rows.
+    const email = String(formData.get("email") || "").trim().toLowerCase();
+    const additionalGuests = attending === "no"
+      ? 0
+      : Math.max(0, parseInt(formData.get("additional_guests"), 10) || 0);
+
     const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      attending: formData.get("attending"),
-      message: formData.get("message") || null,
-      created_at: new Date().toISOString(),
+      name: String(formData.get("name") || "").trim(),
+      email,
+      attending,
+      address_line1: String(formData.get("address_line1") || "").trim(),
+      address_line2: (formData.get("address_line2") || "").toString().trim() || null,
+      city: String(formData.get("city") || "").trim(),
+      state: String(formData.get("state") || "").trim(),
+      postal_code: String(formData.get("postal_code") || "").trim(),
+      country: String(formData.get("country") || "United States").trim(),
+      additional_guests: additionalGuests,
+      message: (formData.get("message") || "").toString().trim() || null,
     };
 
     try {
-      const res = await fetch(`${config.url}/rest/v1/${config.tableName}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: apiKey,
-          Authorization: `Bearer ${apiKey}`,
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify(data),
-      });
+      // Upsert keyed on email. resolution=merge-duplicates makes a re-submit
+      // with the same email overwrite the prior row instead of erroring.
+      const res = await fetch(
+        `${config.url}/rest/v1/${config.tableName}?on_conflict=email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: apiKey,
+            Authorization: `Bearer ${apiKey}`,
+            Prefer: "return=minimal,resolution=merge-duplicates",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (!res.ok) {
         const err = await res.text();
         throw new Error(err || `HTTP ${res.status}`);
       }
 
-      rsvpStatus.textContent = "Thank you! Your RSVP has been received.";
+      rsvpStatus.textContent = "Thank you! Your RSVP has been saved. You can re-submit anytime to update it.";
       rsvpStatus.className = "rsvp-status rsvp-success";
       rsvpForm.reset();
+      syncGuestsVisibility();
     } catch (err) {
       rsvpStatus.textContent = "Something went wrong. Please try again or email us directly.";
       rsvpStatus.className = "rsvp-status rsvp-error";

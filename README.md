@@ -1,6 +1,6 @@
 # Rasmi & Max — Wedding Website
 
-A simple, elegant wedding website for January 31st, 2027 at The Biltmore Hotel in Coral Gables, Florida.
+A simple, elegant wedding website for January 17th, 2027 at The Biltmore Hotel in Coral Gables, Florida.
 
 ## Customize
 
