@@ -241,7 +241,8 @@ if (rsvpForm) {
   rsvpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const config = window.SUPABASE_CONFIG;
-    if (!config?.url || !config?.anonKey || config.url.includes("YOUR_")) {
+    const apiKey = config?.publishableKey || config?.anonKey;
+    if (!config?.url || !apiKey || config.url.includes("YOUR_") || apiKey.includes("YOUR_")) {
       rsvpStatus.textContent = "RSVP is not configured yet. Please add your Supabase keys to config.js";
       rsvpStatus.className = "rsvp-status rsvp-error";
       return;
@@ -265,8 +266,8 @@ if (rsvpForm) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          apikey: config.anonKey,
-          Authorization: `Bearer ${config.anonKey}`,
+          apikey: apiKey,
+          Authorization: `Bearer ${apiKey}`,
           Prefer: "return=minimal",
         },
         body: JSON.stringify(data),

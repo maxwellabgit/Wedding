@@ -1,20 +1,21 @@
-// Supabase configuration — add your keys when ready
-// 1. Create a project at supabase.com
-// 2. In SQL Editor, run:
-//    create table rsvps (
-//      id uuid default gen_random_uuid() primary key,
-//      name text not null,
-//      email text not null,
-//      attending text not null check (attending in ('yes', 'no')),
-//      message text,
-//      created_at timestamptz default now()
-//    );
-//    alter table rsvps enable row level security;
-//    create policy "Allow anonymous insert" on rsvps for insert with check (true);
-// 3. Replace YOUR_PROJECT_REF and YOUR_ANON_KEY below (Settings > API)
+// Supabase configuration for the RSVP form.
+// The publishable key (sb_publishable_...) is safe to ship in the browser:
+// Row Level Security on the `rsvps` table restricts it to insert-only.
+//
+// Schema (run once in Supabase SQL Editor if you haven't already):
+//   create table rsvps (
+//     id uuid default gen_random_uuid() primary key,
+//     name text not null,
+//     email text not null,
+//     attending text not null check (attending in ('yes', 'no')),
+//     message text,
+//     created_at timestamptz default now()
+//   );
+//   alter table rsvps enable row level security;
+//   create policy "Allow anonymous insert" on rsvps for insert with check (true);
 window.SUPABASE_CONFIG = {
-  url: "https://YOUR_PROJECT_REF.supabase.co",
-  anonKey: "YOUR_ANON_KEY",
+  url: "https://uuxfphoxjsgodlrougjp.supabase.co",
+  publishableKey: "sb_publishable_vw9-bX6JGFtbMI7K5mdbCg_xJkoSc8T",
   tableName: "rsvps",
 };
 
