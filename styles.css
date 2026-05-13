@@ -543,6 +543,34 @@ body {
   color: #b91c1c;
 }
 
+.section-registry {
+  background: var(--color-blush);
+}
+
+.section-registry .container {
+  text-align: center;
+}
+
+.registry-text {
+  color: var(--color-slate);
+  max-width: 480px;
+  margin: 0 auto 1.75rem;
+  line-height: 1.7;
+}
+
+.registry-btn {
+  text-decoration: none;
+}
+
+.registry-sub {
+  margin-top: 1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-rose);
+}
+
 .section-gallery {
   background: var(--color-cream);
   overflow: hidden;
