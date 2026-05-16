@@ -18,7 +18,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 110%;
+  font-size: 121%;
 }
 
 body {
@@ -86,6 +86,8 @@ body {
 .hero-confetti-right span:nth-child(8) { animation-delay: 0.58s; }
 .hero-confetti-right span:nth-child(9) { animation-delay: 0.18s; }
 .hero-confetti-right span:nth-child(10) { animation-delay: 0.48s; }
+.hero-confetti-right span:nth-child(11) { animation-delay: 0.32s; }
+.hero-confetti-right span:nth-child(12) { animation-delay: 0.64s; }
 
 @media (max-width: 900px) {
   .hero-confetti {
@@ -124,6 +126,8 @@ body {
 .hero-confetti span:nth-child(8) { left: 58%; top: 52%; background: var(--color-gold); animation-delay: 0.5s; transform: rotate(10deg); }
 .hero-confetti span:nth-child(9) { left: 42%; top: 52%; background: var(--color-rose); animation-delay: 0.1s; transform: rotate(-25deg); }
 .hero-confetti span:nth-child(10) { left: 50%; top: 44%; background: var(--color-blush); animation-delay: 0.4s; transform: rotate(20deg); }
+.hero-confetti span:nth-child(11) { left: 46%; top: 47%; background: var(--color-gold-light); animation-delay: 0.24s; transform: rotate(-5deg); }
+.hero-confetti span:nth-child(12) { left: 56%; top: 56%; background: var(--color-rose); animation-delay: 0.56s; transform: rotate(30deg); }
 
 @keyframes confetti-fire {
   0% {
@@ -173,7 +177,7 @@ body {
 
 .hero-location {
   font-size: 0.95rem;
-  color: var(--color-rose);
+  color: #7f5e5b;
   letter-spacing: 0.1em;
 }
 
@@ -411,7 +415,7 @@ body {
 .rsvp-deadline {
   text-align: center;
   font-size: 0.9rem;
-  color: var(--color-rose);
+  color: #7f5e5b;
   margin-bottom: 1.5rem;
 }
 
@@ -568,7 +572,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-rose);
+  color: #7f5e5b;
 }
 
 .section-gallery {
