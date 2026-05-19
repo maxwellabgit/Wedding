@@ -21,17 +21,14 @@ window.SUPABASE_CONFIG = {
 
 // Gallery — single source of truth. Add/remove paths to change the carousel.
 window.GALLERY_IMAGES = [
-  "public/weddingphoto2.webp",
-  "public/IMG_6934.jpeg",
-  "public/weddingphoto7.webp",
-  "public/Peachy_20250803013648591.jpeg",
-  "public/weddingphoto4.webp",
-  "public/weddingphoto9.webp",
-  "public/weddingphoto1.webp",
+  "public/IMG_6862.jpeg",
+  "public/IMG_6867.jpeg",
+  "public/IMG_6921.jpeg",
   "public/IMG_6939.jpeg",
-  "public/weddingphoto3.webp",
   "public/Peachy_20250803014004100.jpeg",
-  "public/IMG_6936.jpeg",
-  "public/weddingphoto8.webp",
-  "public/IMG_6949.jpeg",
+  "public/Peachy_20250803014336394.jpeg",
+  "public/weddingphoto2.webp",
+  "public/weddingphoto7.webp",
+  "public/weddingphoto1.webp",
+  "public/weddingphoto3.webp",
 ];
