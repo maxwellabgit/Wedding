@@ -19,6 +19,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 121%;
+  overflow-x: clip;
 }
 
 body {
@@ -27,6 +28,7 @@ body {
   color: var(--color-charcoal);
   background: var(--color-cream);
   line-height: 1.6;
+  overflow-x: clip;
 }
 
 /* Hero */
@@ -573,6 +575,15 @@ body {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #7f5e5b;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 480px) {
+  .registry-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+  }
 }
 
 .section-gallery {
