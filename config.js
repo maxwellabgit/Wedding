@@ -17,6 +17,11 @@
 //
 // Insert-only is enough for the public form. Do not add a broad SELECT
 // policy for anon (that would expose every guest's RSVP).
+//
+// Optional columns used by the form:
+//   alter table rsvps add column if not exists additional_guests integer;
+//   alter table rsvps add column if not exists dietary_restrictions text;
+//   -- additional_guests = total party size including the respondent (0 if declining)
 window.SUPABASE_CONFIG = {
   url: "https://uuxfphoxjsgodlrougjp.supabase.co",
   publishableKey: "sb_publishable_vw9-bX6JGFtbMI7K5mdbCg_xJkoSc8T",

@@ -250,18 +250,53 @@ const rsvpSubmit = document.getElementById("rsvp-submit");
 const rsvpAttending = document.getElementById("rsvp-attending");
 const rsvpGuestsField = document.getElementById("rsvp-guests-field");
 const rsvpGuestsInput = document.getElementById("rsvp-guests");
+const rsvpGuestError = document.getElementById("rsvp-guest-error");
+const rsvpDietaryField = document.getElementById("rsvp-dietary-field");
 
-// Hide the guest count when the response is "no" — they're not bringing anyone.
+const MAX_PARTY_SIZE = 10;
+
+// Hide party size / dietary when declining — no guests to count.
 function syncGuestsVisibility() {
   if (!rsvpAttending || !rsvpGuestsField || !rsvpGuestsInput) return;
   const decline = rsvpAttending.value === "no";
   rsvpGuestsField.style.display = decline ? "none" : "";
-  if (decline) rsvpGuestsInput.value = "0";
+  if (rsvpDietaryField) rsvpDietaryField.style.display = decline ? "none" : "";
+  if (decline) {
+    rsvpGuestsInput.value = "1";
+    hideGuestError();
+  }
+}
+
+function hideGuestError() {
+  if (!rsvpGuestError) return;
+  rsvpGuestError.hidden = true;
+  rsvpGuestsInput?.setCustomValidity("");
+}
+
+function validatePartySize() {
+  if (!rsvpGuestsInput) return true;
+  if (rsvpAttending?.value === "no") {
+    hideGuestError();
+    return true;
+  }
+  const raw = rsvpGuestsInput.value;
+  const n = parseInt(raw, 10);
+  if (raw !== "" && !Number.isNaN(n) && n > MAX_PARTY_SIZE) {
+    if (rsvpGuestError) rsvpGuestError.hidden = false;
+    rsvpGuestsInput.setCustomValidity(`Please enter no more than ${MAX_PARTY_SIZE} guests.`);
+    return false;
+  }
+  hideGuestError();
+  return true;
 }
 
 if (rsvpAttending) {
   rsvpAttending.addEventListener("change", syncGuestsVisibility);
   syncGuestsVisibility();
+}
+
+if (rsvpGuestsInput) {
+  rsvpGuestsInput.addEventListener("input", validatePartySize);
 }
 
 // Lazily build a Supabase client — the SDK handles the new sb_publishable_*
@@ -296,13 +331,23 @@ if (rsvpForm) {
     rsvpStatus.textContent = "Submitting...";
     rsvpStatus.className = "rsvp-status";
 
+    if (!validatePartySize()) {
+      rsvpGuestsInput?.reportValidity();
+      return;
+    }
+
     const formData = new FormData(rsvpForm);
     const attending = formData.get("attending");
     // Normalize email so case/whitespace variations don't create duplicate rows.
     const email = String(formData.get("email") || "").trim().toLowerCase();
-    const additionalGuests = attending === "no"
+    // additional_guests stores total party size including the respondent.
+    const partySize = attending === "no"
       ? 0
-      : Math.max(0, parseInt(formData.get("additional_guests"), 10) || 0);
+      : Math.min(
+          MAX_PARTY_SIZE,
+          Math.max(1, parseInt(formData.get("additional_guests"), 10) || 1)
+        );
+    const dietary = (formData.get("dietary_restrictions") || "").toString().trim();
 
     const data = {
       name: String(formData.get("name") || "").trim(),
@@ -314,7 +359,8 @@ if (rsvpForm) {
       state: String(formData.get("state") || "").trim(),
       postal_code: String(formData.get("postal_code") || "").trim(),
       country: String(formData.get("country") || "United States").trim(),
-      additional_guests: additionalGuests,
+      additional_guests: partySize,
+      dietary_restrictions: attending === "no" ? null : dietary || null,
       message: (formData.get("message") || "").toString().trim() || null,
     };
 

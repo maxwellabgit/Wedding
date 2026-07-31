@@ -539,6 +539,18 @@ body {
   font-style: italic;
 }
 
+.rsvp-guest-error {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: #b91c1c;
+  line-height: 1.4;
+}
+
+.rsvp-guest-error[hidden] {
+  display: none;
+}
+
 .rsvp-form .btn {
   width: 100%;
   margin-top: 0.5rem;
