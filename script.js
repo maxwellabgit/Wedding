@@ -319,15 +319,21 @@ if (rsvpForm) {
     };
 
     try {
-      // Upsert keyed on email — re-submitting with the same email overwrites
-      // the prior row in place instead of erroring on the unique constraint.
-      const { error } = await sb
-        .from(config.tableName || "rsvps")
-        .upsert(data, { onConflict: "email", ignoreDuplicates: false });
+      // Plain insert — works with insert-only RLS. Upsert needs an UPDATE
+      // policy too (ON CONFLICT DO UPDATE), which we don't rely on here.
+      const { error } = await sb.from(config.tableName || "rsvps").insert(data);
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === "23505") {
+          rsvpStatus.textContent =
+            "You've already RSVP'd with this email. Email us if you need to update your response.";
+          rsvpStatus.className = "rsvp-status rsvp-error";
+          return;
+        }
+        throw error;
+      }
 
-      rsvpStatus.textContent = "Thank you! Your RSVP has been saved. You can re-submit anytime to update it.";
+      rsvpStatus.textContent = "Thank you! Your RSVP has been received.";
       rsvpStatus.className = "rsvp-status rsvp-success";
       rsvpForm.reset();
       syncGuestsVisibility();

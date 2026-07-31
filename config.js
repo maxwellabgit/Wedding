@@ -12,7 +12,11 @@
 //     created_at timestamptz default now()
 //   );
 //   alter table rsvps enable row level security;
-//   create policy "Allow anonymous insert" on rsvps for insert with check (true);
+//   create policy "Allow anonymous insert"
+//     on rsvps for insert to anon, authenticated with check (true);
+//
+// Insert-only is enough for the public form. Do not add a broad SELECT
+// policy for anon (that would expose every guest's RSVP).
 window.SUPABASE_CONFIG = {
   url: "https://uuxfphoxjsgodlrougjp.supabase.co",
   publishableKey: "sb_publishable_vw9-bX6JGFtbMI7K5mdbCg_xJkoSc8T",
