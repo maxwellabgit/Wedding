@@ -286,6 +286,14 @@ body {
   transform: translateX(2px);
 }
 
+.details-note {
+  max-width: 36rem;
+  margin: 1.75rem auto 0;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  text-align: center;
+  color: var(--color-slate);
+}
 
 .section-stay {
   background: var(--color-cream);
