@@ -367,7 +367,24 @@ if (rsvpForm) {
     try {
       // Plain insert — works with insert-only RLS. Upsert needs an UPDATE
       // policy too (ON CONFLICT DO UPDATE), which we don't rely on here.
-      const { error } = await sb.from(config.tableName || "rsvps").insert(data);
+      let { error } = await sb.from(config.tableName || "rsvps").insert(data);
+
+      // If dietary_restrictions column isn't in Supabase yet, fall back so RSVPs
+      // still succeed (diet note is preserved on the message field).
+      if (
+        error &&
+        (error.code === "PGRST204" || error.code === "42703") &&
+        /dietary_restrictions/i.test(error.message || "")
+      ) {
+        const fallback = { ...data };
+        delete fallback.dietary_restrictions;
+        if (dietary) {
+          fallback.message = fallback.message
+            ? `${fallback.message}\n\nDietary restrictions: ${dietary}`
+            : `Dietary restrictions: ${dietary}`;
+        }
+        ({ error } = await sb.from(config.tableName || "rsvps").insert(fallback));
+      }
 
       if (error) {
         if (error.code === "23505") {
