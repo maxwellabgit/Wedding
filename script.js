@@ -421,8 +421,10 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 
 // Hero text + confetti fade as you scroll through the tall banner
 const hero = document.querySelector(".hero");
+const heroScroll = document.querySelector(".hero-scroll") || hero;
 const heroPin = document.querySelector(".hero-pin");
 const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+const mobileHeroQuery = window.matchMedia("(max-width: 700px)");
 let heroFadeFrame = 0;
 
 function viewportHeight() {
@@ -430,21 +432,21 @@ function viewportHeight() {
 }
 
 function updateHeroFade() {
-  if (!hero || !heroPin) return;
+  if (!heroScroll || !heroPin) return;
 
-  if (reduceMotionQuery.matches) {
+  if (reduceMotionQuery.matches || mobileHeroQuery.matches) {
     heroPin.style.opacity = "1";
     return;
   }
 
   const vh = viewportHeight();
-  const scrollable = Math.max(hero.offsetHeight - vh, 0);
+  const scrollable = Math.max(heroScroll.offsetHeight - vh, 0);
   if (scrollable <= 0) {
     heroPin.style.opacity = "1";
     return;
   }
 
-  const scrolled = Math.min(Math.max(-hero.getBoundingClientRect().top, 0), scrollable);
+  const scrolled = Math.min(Math.max(-heroScroll.getBoundingClientRect().top, 0), scrollable);
   // Fully faded a bit past halfway so landscape reads cleanly on all sizes
   const fadeDistance = scrollable * 0.55;
   const opacity = Math.max(0, 1 - scrolled / fadeDistance);
@@ -472,5 +474,10 @@ if (typeof reduceMotionQuery.addEventListener === "function") {
   reduceMotionQuery.addEventListener("change", updateHeroFade);
 } else if (typeof reduceMotionQuery.addListener === "function") {
   reduceMotionQuery.addListener(updateHeroFade);
+}
+if (typeof mobileHeroQuery.addEventListener === "function") {
+  mobileHeroQuery.addEventListener("change", updateHeroFade);
+} else if (typeof mobileHeroQuery.addListener === "function") {
+  mobileHeroQuery.addListener(updateHeroFade);
 }
 updateHeroFade();

@@ -42,10 +42,15 @@ body {
   --hero-fade-strong: rgba(232, 213, 213, 0.7);
 
   position: relative;
-  height: var(--hero-scroll);
   background: var(--color-cream);
+}
+
+.hero-scroll {
+  position: relative;
+  height: var(--hero-scroll);
   overflow: hidden;
   overflow: clip;
+  background: var(--color-cream);
 }
 
 @supports (height: 100svh) {
@@ -67,7 +72,7 @@ body {
   pointer-events: none;
 }
 
-.hero::after {
+.hero-scroll::after {
   content: "";
   position: absolute;
   left: 0;
@@ -99,8 +104,6 @@ body {
   box-sizing: border-box;
   pointer-events: none;
   will-change: opacity;
-  /* Overlay the banner without adding to hero height (desktop absolute banner) */
-  margin-bottom: calc(-1 * var(--hero-pin-height));
 }
 
 .hero-stage {
@@ -228,6 +231,10 @@ body {
   padding-inline: 0.25rem;
 }
 
+.hero-story-below {
+  display: none;
+}
+
 /* Tablet */
 @media (max-width: 900px) {
   .hero {
@@ -249,51 +256,90 @@ body {
   }
 }
 
-/* Phones — full image width edge-to-edge (no side crop) */
+/* Phones — full-bleed image, titles over sky, story below */
 @media (max-width: 700px) {
   .hero {
-    --hero-scroll: auto;
-    --hero-pin-pad: clamp(4.25rem, 14vh, 7rem);
     --hero-object-pos: center top;
-    --hero-fade-size: clamp(5rem, 18vh, 10rem);
-    height: auto;
-    /* Natural image height; at least one screen so sticky/fade still work */
-    min-height: 100vh;
+    --hero-fade-size: clamp(4rem, 14vh, 8rem);
+    --hero-pin-pad: clamp(2.75rem, 9vw, 4rem);
   }
 
-  @supports (height: 100svh) {
-    .hero {
-      --hero-pin-pad: clamp(4.25rem, 14svh, 7rem);
-      min-height: 100svh;
-    }
+  .hero-scroll {
+    height: auto;
+    aspect-ratio: 1122 / 1402;
+    min-height: 0;
+    width: 100%;
   }
 
   .hero-banner {
-    position: relative;
-    inset: auto;
-    display: block;
+    position: absolute;
+    inset: 0;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .hero-pin {
+    position: absolute;
+    inset: 0 0 auto;
     height: auto;
-    aspect-ratio: 1122 / 1402;
-    object-fit: contain;
-    object-position: var(--hero-object-pos);
+    margin: 0;
+    padding-top: var(--hero-pin-pad);
+    padding-bottom: 0.5rem;
+  }
+
+  .hero-content {
+    padding: 0.25rem 0.5rem 0;
+  }
+
+  .hero-subtitle,
+  .hero-title,
+  .hero-date,
+  .hero-location {
+    text-shadow: 0 1px 2px rgba(250, 248, 245, 0.85);
+  }
+
+  .hero-title {
+    font-size: clamp(2.35rem, 11vw, 3.25rem);
+    margin-bottom: 0.45rem;
+  }
+
+  .hero-date {
+    font-size: 1.15rem;
+  }
+
+  .hero-location {
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-story-overlay {
+    display: none;
+  }
+
+  .hero-story-below {
+    display: block;
+    max-width: 36rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.35rem 0.25rem;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    text-align: center;
+    color: var(--color-slate);
   }
 
   .hero-confetti {
     display: none;
   }
 
-  .hero-story {
-    margin-top: 1.15rem;
-  }
-
   .section-details {
-    padding-top: 1.75rem;
+    padding-top: 2rem;
   }
 }
 
 /* Short viewports / landscape phones */
-@media (max-height: 720px) {
+@media (max-height: 720px) and (min-width: 701px) {
   .hero {
     --hero-scroll: 220vh;
     --hero-pin-pad: clamp(2.5rem, 10vh, 5rem);
@@ -307,7 +353,7 @@ body {
     }
   }
 
-  .hero-story {
+  .hero-story-overlay {
     margin-top: 0.85rem;
     font-size: 0.9rem;
     line-height: 1.55;
@@ -318,7 +364,7 @@ body {
   }
 }
 
-@media (max-height: 560px) {
+@media (max-height: 560px) and (min-width: 701px) {
   .hero {
     --hero-scroll: 240vh;
     --hero-pin-pad: clamp(1.5rem, 8vh, 3.5rem);
@@ -331,7 +377,7 @@ body {
     }
   }
 
-  .hero-story {
+  .hero-story-overlay {
     display: none;
   }
 
