@@ -99,6 +99,8 @@ body {
   box-sizing: border-box;
   pointer-events: none;
   will-change: opacity;
+  /* Overlay the banner without adding to hero height (desktop absolute banner) */
+  margin-bottom: calc(-1 * var(--hero-pin-height));
 }
 
 .hero-stage {
@@ -247,20 +249,34 @@ body {
   }
 }
 
-/* Phones */
+/* Phones — full image width edge-to-edge (no side crop) */
 @media (max-width: 700px) {
   .hero {
-    --hero-scroll: 180vh;
+    --hero-scroll: auto;
     --hero-pin-pad: clamp(4.25rem, 14vh, 7rem);
-    --hero-object-pos: center 10%;
-    --hero-fade-size: clamp(8rem, 26vh, 14rem);
+    --hero-object-pos: center top;
+    --hero-fade-size: clamp(5rem, 18vh, 10rem);
+    height: auto;
+    /* Natural image height; at least one screen so sticky/fade still work */
+    min-height: 100vh;
   }
 
   @supports (height: 100svh) {
     .hero {
-      --hero-scroll: 180svh;
       --hero-pin-pad: clamp(4.25rem, 14svh, 7rem);
+      min-height: 100svh;
     }
+  }
+
+  .hero-banner {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1122 / 1402;
+    object-fit: contain;
+    object-position: var(--hero-object-pos);
   }
 
   .hero-confetti {
@@ -466,6 +482,214 @@ body {
   line-height: 1.7;
 }
 
+.stay-intro-more {
+  margin-bottom: 1.75rem;
+}
+
+.travel-block {
+  max-width: 720px;
+  margin: 0 auto 2.75rem;
+}
+
+.travel-heading {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: var(--color-charcoal);
+  text-align: center;
+  margin-bottom: 0.85rem;
+}
+
+.travel-heading-more {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.travel-text {
+  color: var(--color-slate);
+  font-size: 1rem;
+  line-height: 1.75;
+  text-align: center;
+}
+
+.travel-text a {
+  color: var(--color-gold);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.travel-text a:hover {
+  color: var(--color-gold-light);
+  text-decoration: underline;
+}
+
+.lodging-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.15fr);
+  gap: 2rem;
+  align-items: start;
+  max-width: 980px;
+  margin: 0 auto 3rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.lodging-feature-alt {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
+}
+
+.lodging-feature-alt .lodging-photo {
+  order: 2;
+}
+
+.lodging-feature-alt .lodging-body {
+  order: 1;
+}
+
+.lodging-photo {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--color-blush);
+}
+
+.lodging-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lodging-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.lodging-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-rose);
+}
+
+.lodging-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--color-charcoal);
+  line-height: 1.15;
+}
+
+.lodging-address {
+  color: var(--color-slate);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.lodging-body .travel-text {
+  text-align: left;
+}
+
+.lodging-reserve {
+  padding: 0.9rem 1rem;
+  background: var(--color-cream);
+  border-radius: 10px;
+  border-left: 3px solid var(--color-gold);
+}
+
+.lodging-reserve-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  margin-bottom: 0.35rem;
+}
+
+.lodging-facts {
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+}
+
+.lodging-facts li {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+  color: var(--color-slate);
+  line-height: 1.45;
+}
+
+.lodging-facts li span {
+  font-weight: 600;
+  color: var(--color-charcoal);
+}
+
+.lodging-site-link {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+
+.travel-explore .travel-text {
+  text-align: left;
+}
+
+.explore-list {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.explore-list li {
+  color: var(--color-slate);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-blush);
+}
+
+.explore-list strong {
+  color: var(--color-charcoal);
+  font-weight: 600;
+}
+
+.explore-more {
+  margin-top: 1.5rem;
+}
+
+.explore-links {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.explore-links a {
+  color: var(--color-gold);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.explore-links a:hover {
+  color: var(--color-gold-light);
+  text-decoration: underline;
+}
+
+.stay-closing {
+  margin-top: 1.75rem;
+  font-style: italic;
+}
+
 .hotel-card {
   background: white;
   border-radius: 14px;
@@ -555,8 +779,28 @@ body {
 
 .hotel-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .lodging-feature,
+  .lodging-feature-alt {
+    grid-template-columns: 1fr;
+  }
+
+  .lodging-feature-alt .lodging-photo,
+  .lodging-feature-alt .lodging-body {
+    order: unset;
+  }
+
+  .hotel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lodging-facts li {
+    grid-template-columns: 6.5rem 1fr;
+  }
 }
 
 @media (max-width: 800px) {
