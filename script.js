@@ -422,20 +422,55 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 // Hero text + confetti fade as you scroll through the tall banner
 const hero = document.querySelector(".hero");
 const heroPin = document.querySelector(".hero-pin");
+const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let heroFadeFrame = 0;
+
+function viewportHeight() {
+  return window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight;
+}
 
 function updateHeroFade() {
   if (!hero || !heroPin) return;
-  const scrollable = hero.offsetHeight - window.innerHeight;
+
+  if (reduceMotionQuery.matches) {
+    heroPin.style.opacity = "1";
+    return;
+  }
+
+  const vh = viewportHeight();
+  const scrollable = Math.max(hero.offsetHeight - vh, 0);
   if (scrollable <= 0) {
     heroPin.style.opacity = "1";
     return;
   }
+
   const scrolled = Math.min(Math.max(-hero.getBoundingClientRect().top, 0), scrollable);
-  // Fully faded by ~55% through the banner so landscape reads cleanly
-  const opacity = Math.max(0, 1 - scrolled / (scrollable * 0.55));
-  heroPin.style.opacity = String(opacity);
+  // Fully faded a bit past halfway so landscape reads cleanly on all sizes
+  const fadeDistance = scrollable * 0.55;
+  const opacity = Math.max(0, 1 - scrolled / fadeDistance);
+  heroPin.style.opacity = opacity.toFixed(3);
 }
 
-window.addEventListener("scroll", updateHeroFade, { passive: true });
-window.addEventListener("resize", updateHeroFade);
+function scheduleHeroFade() {
+  if (heroFadeFrame) return;
+  heroFadeFrame = window.requestAnimationFrame(() => {
+    heroFadeFrame = 0;
+    updateHeroFade();
+  });
+}
+
+window.addEventListener("scroll", scheduleHeroFade, { passive: true });
+window.addEventListener("resize", scheduleHeroFade);
+window.addEventListener("orientationchange", () => {
+  window.setTimeout(scheduleHeroFade, 50);
+});
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", scheduleHeroFade);
+  window.visualViewport.addEventListener("scroll", scheduleHeroFade);
+}
+if (typeof reduceMotionQuery.addEventListener === "function") {
+  reduceMotionQuery.addEventListener("change", updateHeroFade);
+} else if (typeof reduceMotionQuery.addListener === "function") {
+  reduceMotionQuery.addListener(updateHeroFade);
+}
 updateHeroFade();
