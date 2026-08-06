@@ -12,16 +12,19 @@
 <body>
   <header class="hero">
     <div class="hero-scroll">
-      <img
-        class="hero-banner"
-        src="public/site_scroll.png"
-        alt=""
-        width="1122"
-        height="1402"
-        sizes="100vw"
-        decoding="async"
-        fetchpriority="high"
-      />
+      <picture class="hero-picture">
+        <source media="(max-width: 700px)" srcset="public/mobile_site_scroll.png" />
+        <img
+          class="hero-banner"
+          src="public/site_scroll.png"
+          alt=""
+          width="1122"
+          height="1402"
+          sizes="100vw"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </picture>
       <div class="hero-pin">
         <div class="hero-stage">
           <div class="hero-confetti hero-confetti-left" aria-hidden="true">

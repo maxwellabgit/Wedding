@@ -424,7 +424,6 @@ const hero = document.querySelector(".hero");
 const heroScroll = document.querySelector(".hero-scroll") || hero;
 const heroPin = document.querySelector(".hero-pin");
 const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-const mobileHeroQuery = window.matchMedia("(max-width: 700px)");
 let heroFadeFrame = 0;
 
 function viewportHeight() {
@@ -434,7 +433,7 @@ function viewportHeight() {
 function updateHeroFade() {
   if (!heroScroll || !heroPin) return;
 
-  if (reduceMotionQuery.matches || mobileHeroQuery.matches) {
+  if (reduceMotionQuery.matches) {
     heroPin.style.opacity = "1";
     return;
   }
@@ -474,10 +473,5 @@ if (typeof reduceMotionQuery.addEventListener === "function") {
   reduceMotionQuery.addEventListener("change", updateHeroFade);
 } else if (typeof reduceMotionQuery.addListener === "function") {
   reduceMotionQuery.addListener(updateHeroFade);
-}
-if (typeof mobileHeroQuery.addEventListener === "function") {
-  mobileHeroQuery.addEventListener("change", updateHeroFade);
-} else if (typeof mobileHeroQuery.addListener === "function") {
-  mobileHeroQuery.addListener(updateHeroFade);
 }
 updateHeroFade();
