@@ -418,3 +418,24 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     if (target) target.scrollIntoView({ behavior: "smooth" });
   });
 });
+
+// Hero text + confetti fade as you scroll through the tall banner
+const hero = document.querySelector(".hero");
+const heroPin = document.querySelector(".hero-pin");
+
+function updateHeroFade() {
+  if (!hero || !heroPin) return;
+  const scrollable = hero.offsetHeight - window.innerHeight;
+  if (scrollable <= 0) {
+    heroPin.style.opacity = "1";
+    return;
+  }
+  const scrolled = Math.min(Math.max(-hero.getBoundingClientRect().top, 0), scrollable);
+  // Fully faded by ~55% through the banner so landscape reads cleanly
+  const opacity = Math.max(0, 1 - scrolled / (scrollable * 0.55));
+  heroPin.style.opacity = String(opacity);
+}
+
+window.addEventListener("scroll", updateHeroFade, { passive: true });
+window.addEventListener("resize", updateHeroFade);
+updateHeroFade();

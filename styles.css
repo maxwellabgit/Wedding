@@ -31,51 +31,80 @@ body {
   overflow-x: clip;
 }
 
-/* Hero */
+/* Hero — tall scrollable banner with sticky fading text */
 .hero {
   position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-blush) 0%, var(--color-cream) 50%, var(--color-blush) 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  background: var(--color-cream);
+  overflow-x: clip;
 }
 
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-.hero-overlay {
+.hero::after {
+  content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 0%, rgba(250, 248, 245, 0.4) 100%);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(10rem, 32vh, 22rem);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(232, 213, 213, 0.25) 28%,
+    rgba(232, 213, 213, 0.7) 62%,
+    var(--color-blush) 100%
+  );
   pointer-events: none;
+  z-index: 1;
+}
+
+.hero-pin {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: clamp(6.5rem, 24vh, 12rem);
+  margin-bottom: -100vh;
+  margin-bottom: -100dvh;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.hero-banner {
+  display: block;
+  width: 100%;
+  /* Tall enough to scroll through; cover crops sides only when needed */
+  height: max(200vh, calc(100vw * 1402 / 1122));
+  height: max(200dvh, calc(100vw * 1402 / 1122));
+  object-fit: cover;
+  object-position: center 14%;
+  vertical-align: top;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 /* Confetti */
 .hero-confetti {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: calc(clamp(6.5rem, 24vh, 12rem) + 3.2rem);
+  transform: none;
   width: 144px;
   height: 144px;
   pointer-events: none;
   z-index: 2;
+  will-change: opacity;
 }
 
 .hero-confetti-left {
   left: calc(50% - 380px);
-  top: calc(50% - 40px);
 }
 
 .hero-confetti-right {
   right: calc(50% - 380px);
   left: auto;
-  top: calc(50% - 38px);
-  transform: translateY(-50%) scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .hero-confetti-right span:nth-child(1) { animation-delay: 0.08s; }
@@ -97,16 +126,26 @@ body {
     height: 96px;
   }
   .hero-confetti-left {
-    left: calc(50% - 340px);
+    left: calc(50% - 300px);
   }
   .hero-confetti-right {
-    right: calc(50% - 340px);
+    right: calc(50% - 300px);
   }
 }
 
 @media (max-width: 700px) {
   .hero-confetti {
     display: none;
+  }
+
+  .hero-pin {
+    padding-top: clamp(5rem, 18vh, 8rem);
+  }
+
+  .hero-banner {
+    height: max(185vh, calc(100vw * 1402 / 1122));
+    height: max(185dvh, calc(100vw * 1402 / 1122));
+    object-position: center 12%;
   }
 }
 
@@ -146,8 +185,9 @@ body {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 2rem;
+  padding: 1.25rem 2rem 2rem;
   transform: scale(1.1);
+  will-change: opacity;
 }
 
 .hero-subtitle {
@@ -203,7 +243,7 @@ body {
 
 .section-title {
   font-family: var(--font-serif);
-  font-size: 2.25rem;
+  font-size: 2.475rem;
   font-weight: 600;
   text-align: center;
   color: var(--color-charcoal);
@@ -223,6 +263,7 @@ body {
 
 .section-details {
   background: var(--color-blush);
+  padding-top: 2.25rem;
 }
 
 .details-card {
